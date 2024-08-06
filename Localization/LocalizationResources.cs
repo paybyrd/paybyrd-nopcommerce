@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Plugin.Payments.Paybyrd.Localization
+﻿namespace Nop.Plugin.Payments.Paybyrd.Localization
 {
     public static class LocalizationResources
     {

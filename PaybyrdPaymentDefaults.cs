@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Plugin.Payments.Paybyrd;
+﻿namespace Nop.Plugin.Payments.Paybyrd;
 
 /// <summary>
 /// Represents plugin constants

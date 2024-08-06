@@ -2,7 +2,6 @@
 using Nop.Plugin.Payments.Paybyrd.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Components;
-using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.Paybyrd.Components;
 

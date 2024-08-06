@@ -1,12 +1,10 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Net.Http;
+﻿using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Infrastructure;
@@ -184,6 +182,8 @@ public class PaymentPaybyrdController : BasePaymentController
         }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+        var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
         var currency = order.CustomerCurrencyCode;
         var culture = (await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId))?.LanguageCulture;
         var testModeEnabled = settings.EnableTestMode;
@@ -198,8 +198,8 @@ public class PaymentPaybyrdController : BasePaymentController
             shopper = new
             {
                 email = customer.Email,
-                firstName = customer.FirstName,
-                lastName = customer.LastName
+                firstName,
+                lastName
             },
             orderOptions = new
             {
