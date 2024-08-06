@@ -1,5 +1,8 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,6 +13,7 @@ using Nop.Core.Infrastructure;
 using Nop.Plugin.Payments.Paybyrd.Localization;
 using Nop.Plugin.Payments.Paybyrd.Models;
 using Nop.Services;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -22,7 +26,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Payments.Paybyrd.Controllers;
 
 [AuthorizeAdmin]
-[Area(AreaNames.ADMIN)]
+[Area(AreaNames.Admin)]
 public class PaymentPaybyrdController : BasePaymentController
 {
     #region Fields
@@ -36,6 +40,7 @@ public class PaymentPaybyrdController : BasePaymentController
     protected readonly IWebHelper _webHelper;
     protected readonly IOrderService _orderService;
     protected readonly IWorkContext _workContext;
+    protected readonly IGenericAttributeService _genericAttributeService;
 
     #endregion
 
@@ -49,7 +54,8 @@ public class PaymentPaybyrdController : BasePaymentController
         IStoreContext storeContext,
         IWebHelper webHelper,
         IOrderService orderService,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        IGenericAttributeService genericAttributeService)
     {
         _languageService = languageService;
         _localizationService = localizationService;
@@ -60,6 +66,7 @@ public class PaymentPaybyrdController : BasePaymentController
         _webHelper = webHelper;
         _orderService = orderService;
         _workContext = workContext;
+        _genericAttributeService = genericAttributeService;
     }
 
     #endregion
@@ -88,6 +95,7 @@ public class PaymentPaybyrdController : BasePaymentController
             HFBackgroundColor = paybyrdPaymentSettings.HFBackgroundColor,
             HFPaymentBackgroundColor = paybyrdPaymentSettings.HFPaymentBackgroundColor,
             HFPrimaryColor = paybyrdPaymentSettings.HFPrimaryColor,
+            HFTextColor = paybyrdPaymentSettings.HFTextColor,
             ActiveStoreScopeConfiguration = storeScope
         };
 

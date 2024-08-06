@@ -1,4 +1,6 @@
-﻿namespace Nop.Plugin.Payments.Paybyrd;
+﻿using System.Collections.Generic;
+
+namespace Nop.Plugin.Payments.Paybyrd;
 
 /// <summary>
 /// Represents plugin constants
@@ -48,8 +50,8 @@ public class PaybyrdPaymentDefaults
     /// <summary>
     /// Gets webhook event names to subscribe
     /// </summary>
-    public static List<string> WebhookEventNames =>
-    [
+    public static List<string> WebhookEventNames => new List<string>
+    {
         "order.created",
         "order.pending",
         "order.paid",
@@ -57,5 +59,5 @@ public class PaybyrdPaymentDefaults
         "order.canceled",
         "order.expired",
         "order.temporaryfailed"
-    ];
+    };
 }

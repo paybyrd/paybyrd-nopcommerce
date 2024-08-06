@@ -31,13 +31,11 @@ public record ConfigurationModel : BaseNopModel
     public bool HFTextColor_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Plugins.Payments.Paybyrd.LiveApiKey")]
-    [NoTrim]
     [DataType(DataType.Password)]
     public string LiveApiKey { get; set; }
     public bool LiveApiKey_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Plugins.Payments.Paybyrd.TestApiKey")]
-    [NoTrim]
     [DataType(DataType.Password)]
     public string TestApiKey { get; set; }
     public bool TestApiKey_OverrideForStore { get; set; }
