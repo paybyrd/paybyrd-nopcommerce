@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Paybyrd",
+  "SystemName": "Payments.Paybyrd",
+  "Version": "1.0.0",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "Paybyrd B.V.",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Paybyrd.dll",
+  "Description": "Pay with Paybyrd"
+}
