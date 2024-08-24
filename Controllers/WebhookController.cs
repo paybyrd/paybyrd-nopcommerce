@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -35,6 +37,7 @@ namespace Nop.Plugin.Payments.Paybyrd.Controllers
             var paybyrdPaymentSettings = await _settingService.LoadSettingAsync<PaybyrdPaymentSettings>(storeScope);
             var webhookId = paybyrdPaymentSettings.WebhookId;
             var testModeEnabled = paybyrdPaymentSettings.EnableTestMode;
+            var postPaymentOrderStatus = paybyrdPaymentSettings.PostPaymentOrderStatus;
 
             // Validate x-api-key header
             if (!Request.Headers.TryGetValue("x-api-key", out var apiKey) || apiKey != webhookId)
@@ -87,7 +90,7 @@ namespace Nop.Plugin.Payments.Paybyrd.Controllers
                     else
                     {
                         order.PaymentStatus = PaymentStatus.Paid;
-                        order.OrderStatus = OrderStatus.Complete;
+                        order.OrderStatus = postPaymentOrderStatus == PostPaymentOrderStatus.Processing ? OrderStatus.Processing : OrderStatus.Complete;
                         await _orderService.UpdateOrderAsync(order);
                     }
 

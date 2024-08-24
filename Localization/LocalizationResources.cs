@@ -1,4 +1,6 @@
-﻿namespace Nop.Plugin.Payments.Paybyrd.Localization
+﻿using System.Collections.Generic;
+
+namespace Nop.Plugin.Payments.Paybyrd.Localization
 {
     public static class LocalizationResources
     {
@@ -26,15 +28,13 @@
                 ["Plugins.Payments.Paybyrd.OrderNotPaid"] = "The order is still being processed.",
                 ["Plugins.Payments.Paybyrd.OrderPaymentError"] = "There was en error on processing this payment.",
                 ["Plugins.Payments.Paybyrd.OrderRefunded"] = "The order was refunded.",
-                ["Plugins.Payments.Paybyrd.OrderTestPaid"] = "The test payment was validated. The order status will not be changed to paid.",
+                ["Plugins.Payments.Paybyrd.OrderTestPaid"] = "The test payment was validated. The order status will not be changed to paid due to the \"Enable Test Mode\" option being set as true.",
                 ["Plugins.Payments.Paybyrd.TestApiKey"] = "Test Private Key",
                 ["Plugins.Payments.Paybyrd.TestMode"] = "Enable Test Mode",
                 ["Plugins.Payments.Paybyrd.TestMode.Hint"] = "Switches the payment gateway to use your test API Keys. Turn this flag off when ready for production.",
                 ["Plugins.Payments.Paybyrd.PaymentMethodDescription"] = "Pay using Paybyrd Hosted Form and select your preferred payment method to pay, like credit card and others.",
                 ["Plugins.Payments.Manual.Fields.PostPaymentOrderStatus"] = "After payment mark order as",
                 ["Plugins.Payments.Manual.Fields.PostPaymentOrderStatus.Hint"] = "Specify which order status should be applied after a successful payment. Usually Processing (default) is the recommended option and the Complete is for digital products.",
-                ["Plugins.Payments.Paybyrd.ShippableProductRequired"] = "Shippable product required",
-                ["Plugins.Payments.Paybyrd.ShippableProductRequired.Hint"] = "An option indicating whether shippable products are required in order to display this payment method during checkout.",
                 ["Plugins.Payments.Paybyrd.WebhookId"] = "Webhook ID",
                 ["Plugins.Payments.Paybyrd.WebhookId.Hint"] = "This field is automatically generated after filling Live Api Key and saving for the first time and it is required for processing async payments.",
                 ["Plugins.Payments.Paybyrd.WebhookCreationFailed"] = "The Webhook creation has failed. Try saving again."

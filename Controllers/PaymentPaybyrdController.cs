@@ -1,14 +1,15 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Infrastructure;
-using Nop.Plugin.Payments.Paybyrd.Localization;
+using Nop.Core.Domain.Customers;
 using Nop.Plugin.Payments.Paybyrd.Models;
 using Nop.Services;
 using Nop.Services.Common;
@@ -75,8 +76,6 @@ public class PaymentPaybyrdController : BasePaymentController
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
             return AccessDeniedView();
-
-        await UpdateLocaleResources();
 
         // Load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -373,12 +372,6 @@ public class PaymentPaybyrdController : BasePaymentController
         }
 
         return RedirectToRoute("ShoppingCart");
-    }
-
-    public async Task UpdateLocaleResources()
-    {
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-        await _localizationService.AddOrUpdateLocaleResourceAsync(LocalizationResources.GetLocaleResources());
     }
 
     private async Task<string> FetchWebhookIdAsync(string liveApiKey, string currentWebhookId)

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Portuguese (Portugal)" LanguageCulture="pt-PT" UniqueSeoCode="pt" FlagImageFileName="pt.png">
+  <LocaleResource Name="Plugins.Payments.Paybyrd.DescriptionText">
+    <Value>Ao selecionar o Método de Pagamento Paybyrd, pode prosseguir com o checkout e, após confirmar, será redirecionado para a página do Hosted Form da Paybyrd para concluir o pagamento. Com a Paybyrd, pode usar diferentes formas de pagamento para o seu pedido, como Cartões de Crédito, MBWay, Multibanco, Paypal e muitos outros!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.EnableTestMode">
+    <Value>Ativar Modo de Teste</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.EnableTestMode.Hint">
+    <Value>Quando ativado, todas as chamadas à API usarão a Chave de API de Testes em vez da Chave Live. Use isto para testar pagamentos antes de entrar em produção.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFBackgroundColor">
+    <Value>Cor de Fundo do Hosted Form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFBackgroundColor.Hint">
+    <Value>Define a cor de fundo principal para toda a página de formulário do Hosted Form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFPaymentBackgroundColor">
+    <Value>Cor de Fundo da caixa de seleção de pagamento do Hosted Form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFPaymentBackgroundColor.Hint">
+    <Value>Define a cor de fundo para a caixa de seleção de pagamento no Hosted Form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFPrimaryColor">
+    <Value>Cor Primária do Hosted Form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFPrimaryColor.Hint">
+    <Value>Define as cores principais de botões e ícones.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFTextColor">
+    <Value>Cor do Texto do Hosted Form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.HFTextColor.Hint">
+    <Value>Define todas as cores das fontes para o Hosted Form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.Instructions">
+    <Value>Configure o plugin Paybyrd preenchendo os campos abaixo. Uma vez preenchida e guardada a Chave de API Live, o plugin estará pronto para ser usado pelos clientes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.LiveApiKey">
+    <Value>Chave Privada Live</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.LiveApiKey.Required">
+    <Value>Chave Privada Live é obrigatória</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderCreationError">
+    <Value>A criação do pedido Paybyrd falhou:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderNotFound">
+    <Value>Pedido não encontrado.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderCanceled">
+    <Value>O pedido foi cancelado.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderNotPaid">
+    <Value>O pedido ainda está a ser processado.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderPaymentError">
+    <Value>Ocorreu um erro ao processar este pagamento.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderRefunded">
+    <Value>O pedido foi reembolsado.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderTestPaid">
+    <Value>O pagamento de teste foi validado. O estado do pedido não será alterado para pago pois a opção "Ativar Modo de Teste" está habilitada.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.TestApiKey">
+    <Value>Chave Privada de Teste</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.TestMode">
+    <Value>Ativar Modo de Teste</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.TestMode.Hint">
+    <Value>Alterna o gateway de pagamento para usar as suas chaves de API de teste. Desative esta opção quando estiver pronto para produção.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.PaymentMethodDescription">
+    <Value>Pague usando o Hosted Form do Paybyrd e selecione o seu método de pagamento preferido, como cartão de crédito e outros.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.PostPaymentOrderStatus">
+    <Value>Após o pagamento, marque o pedido como</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.PostPaymentOrderStatus.Hint">
+    <Value>Especifique qual o estado do pedido que deve ser aplicado após um pagamento bem-sucedido. Normalmente, 'Em Processamento' (padrão) é a opção recomendada, e 'Completo' é para produtos digitais.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.WebhookId">
+    <Value>ID do Webhook</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.WebhookId.Hint">
+    <Value>Este campo é gerado automaticamente após preencher a Chave API Live e guardar pela primeira vez e é necessário para processar pagamentos assíncronos.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.WebhookCreationFailed">
+    <Value>A criação do Webhook falhou. Tente guardar novamente.</Value>
+  </LocaleResource>
+</Language>
