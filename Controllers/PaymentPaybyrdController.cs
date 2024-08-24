@@ -71,8 +71,6 @@ public class PaymentPaybyrdController : BasePaymentController
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
             return AccessDeniedView();
 
-        await UpdateLocaleResources();
-
         // Load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var paybyrdPaymentSettings = await _settingService.LoadSettingAsync<PaybyrdPaymentSettings>(storeScope);
@@ -365,12 +363,6 @@ public class PaymentPaybyrdController : BasePaymentController
         }
 
         return RedirectToRoute("ShoppingCart");
-    }
-
-    public async Task UpdateLocaleResources()
-    {
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-        await _localizationService.AddOrUpdateLocaleResourceAsync(LocalizationResources.GetLocaleResources());
     }
 
     private async Task<string> FetchWebhookIdAsync(string liveApiKey, string currentWebhookId)
