@@ -9,8 +9,6 @@ using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Infrastructure;
-using Nop.Plugin.Payments.Paybyrd.Localization;
 using Nop.Plugin.Payments.Paybyrd.Models;
 using Nop.Services;
 using Nop.Services.Common;
@@ -77,8 +75,6 @@ public class PaymentPaybyrdController : BasePaymentController
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
             return AccessDeniedView();
-
-        await UpdateLocaleResources();
 
         // Load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -373,12 +369,6 @@ public class PaymentPaybyrdController : BasePaymentController
         }
 
         return RedirectToRoute("ShoppingCart");
-    }
-
-    public async Task UpdateLocaleResources()
-    {
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-        await _localizationService.AddOrUpdateLocaleResourceAsync(LocalizationResources.GetLocaleResources());
     }
 
     private async Task<string> FetchWebhookIdAsync(string liveApiKey, string currentWebhookId)
