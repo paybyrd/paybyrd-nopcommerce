@@ -254,8 +254,7 @@ public class PaymentPaybyrdController : BasePaymentController
                     TextColor = settings.HFTextColor
                 },
                 AutoRedirect = true,
-                ShowCancelButton = false,
-                SkipATMSuccessPage = true
+                ShowCancelButton = false
             };
 
             // Convert configs to base64 that is supported by the FE to customize theme
@@ -266,6 +265,12 @@ public class PaymentPaybyrdController : BasePaymentController
             var hostedFormConfigsJsonString = JsonConvert.SerializeObject(hostedFormConfigs, jsonSerializerSettings);
             var hostedFormConfigsJsonBytes = Encoding.UTF8.GetBytes(hostedFormConfigsJsonString);
             var hostedFormConfigsBase64String = Convert.ToBase64String(hostedFormConfigsJsonBytes);
+
+            // Set new OrderGuid with the one receieved from Paybyrd
+            order.OrderGuid = hostedFormOrderId;
+
+            // Save the updated order
+            await _orderService.UpdateOrderAsync(order);
 
             return Redirect($"{PaybyrdPaymentDefaults.PaybyrdHostedFormBasePath}?checkoutKey={hostedFormCheckoutKey}&orderId={hostedFormOrderId}&configs={hostedFormConfigsBase64String}");
         }

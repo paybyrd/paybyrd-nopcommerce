@@ -1,18 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentMigrator.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Paybyrd.Components;
 using Nop.Plugin.Payments.Paybyrd.Localization;
+using Nop.Plugin.Payments.Paybyrd.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.Paybyrd;
@@ -26,11 +34,14 @@ public class PaybyrdPaymentProcessor : BasePlugin, IPaymentMethod
 
     protected readonly PaybyrdPaymentSettings _paybyrdPaymentSettings;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INotificationService _notificationService;
     protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
     protected readonly ISettingService _settingService;
+    protected readonly IStoreContext _storeContext;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IWebHelper _webHelper;
     protected readonly IUrlHelperFactory _urlHelperFactory;
+    protected readonly IOrderService _orderService;
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -40,21 +51,27 @@ public class PaybyrdPaymentProcessor : BasePlugin, IPaymentMethod
 
     public PaybyrdPaymentProcessor(PaybyrdPaymentSettings paybyrdPaymentSettings,
         ILocalizationService localizationService,
+        INotificationService notificationService,
         IOrderTotalCalculationService orderTotalCalculationService,
         ISettingService settingService,
+        IStoreContext storeContext,
         IShoppingCartService shoppingCartService,
         IWebHelper webHelper,
         IUrlHelperFactory urlHelperFactory,
+        IOrderService orderService,
         IActionContextAccessor actionContextAccessor,
         IHttpContextAccessor httpContextAccessor)
     {
         _paybyrdPaymentSettings = paybyrdPaymentSettings;
         _localizationService = localizationService;
+        _notificationService = notificationService;
         _orderTotalCalculationService = orderTotalCalculationService;
         _settingService = settingService;
+        _storeContext = storeContext;
         _shoppingCartService = shoppingCartService;
         _webHelper = webHelper;
         _urlHelperFactory = urlHelperFactory;
+        _orderService = orderService;
         _actionContextAccessor = actionContextAccessor;
         _httpContextAccessor = httpContextAccessor;
     }
@@ -147,9 +164,113 @@ public class PaybyrdPaymentProcessor : BasePlugin, IPaymentMethod
     /// A task that represents the asynchronous operation
     /// The task result contains the result
     /// </returns>
-    public Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
+    public async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
     {
-        return Task.FromResult(new RefundPaymentResult { Errors = new[] { "Refund method not supported" } });
+        var result = new RefundPaymentResult();
+
+        try
+        {
+            var client = new HttpClient();
+            var orderId = refundPaymentRequest.Order.OrderGuid;
+
+            using (client)
+            {
+                var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+                var settings = await _settingService.LoadSettingAsync<PaybyrdPaymentSettings>(storeScope);
+                var testModeEnabled = settings.EnableTestMode;
+                var apiKey = testModeEnabled ? settings.TestApiKey : settings.LiveApiKey;
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+
+                var response = await client.GetAsync($"{PaybyrdPaymentDefaults.PaybyrdAPIBasePath}/orders/{orderId}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    var orderStatusErrorMessage = await _localizationService.GetResourceAsync("Plugins.Payments.Paybyrd.OrderStatusError");
+
+                    _notificationService.ErrorNotification($"{orderStatusErrorMessage} {errorMessage}");
+                    return result;
+                }
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<dynamic>(responseString);
+                var transactions = ((JArray)responseObject.transactions).ToObject<TransactionModel[]>();
+                Guid refundTransactionId;
+
+                var firstSuccessTransaction = transactions.ToList().Find(t => t.status == "Success");
+
+                // Check if a successful transaction was found
+                if (firstSuccessTransaction != null)
+                {
+                    refundTransactionId = firstSuccessTransaction.transactionId;
+                } else
+                {
+                    var refundErrorMessage = await _localizationService.GetResourceAsync("Plugins.Payments.Paybyrd.OrderRefundError");
+
+                    _notificationService.ErrorNotification(refundErrorMessage);
+                    return result;
+                }
+
+                // Set up the refund request payload
+                var refundPayload = new
+                {
+                    isoAmount = (int)(refundPaymentRequest.AmountToRefund * 100)
+                };
+
+                var jsonPayload = JsonConvert.SerializeObject(refundPayload);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                // POST the Refund Request
+                var refundResponse = await client.PostAsync($"{PaybyrdPaymentDefaults.PaybyrdAPIBasePath}/refund/{refundTransactionId}", content);
+
+                // Check if the refund was successful
+                if (refundResponse.IsSuccessStatusCode)
+                {
+                    var order = await _orderService.GetOrderByIdAsync(refundPaymentRequest.Order.Id);
+
+                    if (order == null)
+                    {
+                        var orderNotFoundMessage = await _localizationService.GetResourceAsync("Plugins.Payments.Paybyrd.OrderNotFound");
+
+                        _notificationService.ErrorNotification(orderNotFoundMessage);
+                        return result;
+                    }
+
+                    if (refundPaymentRequest.IsPartialRefund)
+                    {
+                        order.PaymentStatus = PaymentStatus.PartiallyRefunded;
+                        result.NewPaymentStatus = PaymentStatus.PartiallyRefunded;
+                    } else
+                    {
+                        order.PaymentStatus = PaymentStatus.Refunded;
+                        result.NewPaymentStatus = PaymentStatus.Refunded;
+                    }
+
+                    // Update order payment status
+                    await _orderService.UpdateOrderAsync(order);
+
+                    var orderRefundedMessage = await _localizationService.GetResourceAsync("Plugins.Payments.Paybyrd.OrderRefunded");
+                    _notificationService.SuccessNotification(orderRefundedMessage);
+
+                    return result;
+                }
+                else
+                {
+                    result.Errors.Add($"Refund request failed with status code: {refundResponse.StatusCode}");
+                    return result;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log exception and set errors
+            result.Errors.Add($"An error occurred while processing the refund: {ex.Message}");
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -323,12 +444,12 @@ public class PaybyrdPaymentProcessor : BasePlugin, IPaymentMethod
     /// <summary>
     /// Gets a value indicating whether partial refund is supported
     /// </summary>
-    public bool SupportPartiallyRefund => false;
+    public bool SupportPartiallyRefund => true;
 
     /// <summary>
     /// Gets a value indicating whether refund is supported
     /// </summary>
-    public bool SupportRefund => false;
+    public bool SupportRefund => true;
 
     /// <summary>
     /// Gets a value indicating whether void is supported
