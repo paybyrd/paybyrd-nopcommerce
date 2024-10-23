@@ -11,7 +11,7 @@ public class PaybyrdViewComponent : NopViewComponent
 
     public PaybyrdViewComponent(ILocalizationService localizationService)
     {
-        _localizationService = localizationService;;
+        _localizationService = localizationService;
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
