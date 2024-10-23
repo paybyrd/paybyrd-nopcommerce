@@ -200,12 +200,12 @@ public class PaybyrdPaymentProcessor : BasePlugin, IPaymentMethod
                 var transactions = ((JArray)responseObject.transactions).ToObject<TransactionModel[]>();
                 Guid refundTransactionId;
 
-                var firstSuccessTransaction = transactions.ToList().Find(t => t.status == "Success");
+                var firstSuccessTransaction = transactions.ToList().Find(t => t.Status == "Success");
 
                 // Check if a successful transaction was found
                 if (firstSuccessTransaction != null)
                 {
-                    refundTransactionId = firstSuccessTransaction.transactionId;
+                    refundTransactionId = firstSuccessTransaction.TransactionId;
                 } else
                 {
                     var refundErrorMessage = await _localizationService.GetResourceAsync("Plugins.Payments.Paybyrd.OrderRefundError");

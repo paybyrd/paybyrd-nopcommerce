@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Payments.Paybyrd.Models
 {
     internal class TransactionModel
     {
-        public string status { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; }
 
-        public Guid transactionId { get; set; }
+        [JsonProperty("transactionId")]
+        public Guid TransactionId { get; set; }
     }
 }
