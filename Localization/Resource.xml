@@ -57,8 +57,14 @@
   <LocaleResource Name="Plugins.Payments.Paybyrd.OrderPaymentError">
     <Value>Ocorreu um erro ao processar este pagamento.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderRefundError">
+    <Value>Houve um erro na devolução deste pedido.</Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Payments.Paybyrd.OrderRefunded">
     <Value>O pedido foi reembolsado.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Paybyrd.OrderStatusError">
+    <Value>Houve um error no processamento deste pedido:</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.Paybyrd.OrderTestPaid">
     <Value>O pagamento de teste foi validado. O estado do pedido não será alterado para pago pois a opção "Ativar Modo de Teste" está habilitada.</Value>

@@ -18,6 +18,5 @@
         public HostedFormThemeConfigurationsModel Theme { get; set; }
         public bool AutoRedirect { get; set; }
         public bool ShowCancelButton { get; set; }
-        public bool SkipATMSuccessPage { get; set; }
     }
 }
